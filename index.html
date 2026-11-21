@@ -74,6 +74,11 @@
       }
     }
 
+    @keyframes dotBlink {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.45; transform: scale(0.85); }
+    }
+
     .barber-strip {
       display: flex;
       align-items: center;
@@ -103,19 +108,44 @@
       display: block;
     }
     .barber-meta { flex: 1 1 240px; }
-    .barber-tag {
-      display: inline-block;
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
       font-size: 11px;
       font-weight: bold;
       text-transform: uppercase;
       letter-spacing: 0.8px;
-      color: #79e2bc;
-      background: #0d3b2c;
-      border: 1px solid #45b88e;
-      padding: 3px 9px;
+      padding: 4px 10px;
       border-radius: 999px;
       margin-bottom: 6px;
     }
+    .status-badge.is-online {
+      color: #79e2bc;
+      background: #0d3b2c;
+      border: 1px solid #45b88e;
+    }
+    .status-badge.is-online .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #45b88e;
+      box-shadow: 0 0 8px #45b88e;
+      animation: dotBlink 1.8s ease-in-out infinite;
+    }
+    .status-badge.is-offline {
+      color: #98a8a0;
+      background: #131c18;
+      border: 1px solid #2b3e35;
+    }
+    .status-badge.is-offline .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #6a7d74;
+    }
+
     .barber-name {
       font-size: 20px;
       font-weight: bold;
@@ -125,6 +155,10 @@
       margin: 0;
       color: #98a8a0;
       font-size: 14px;
+    }
+    .last-seen {
+      color: #45b88e;
+      font-weight: bold;
     }
 
     .hero {
@@ -249,9 +283,12 @@
         <img src="profilowe.jpg" alt="DESOHAIRCUTS – Twój barber" onerror="this.style.display='none'">
       </div>
       <div class="barber-meta">
-        <span class="barber-tag">Za fotel odpowiada</span>
+        <span id="statusBadge" class="status-badge is-online">
+          <span class="status-dot" aria-hidden="true"></span>
+          <span id="statusText">ONLINE</span>
+        </span>
         <div class="barber-name">DESOHAIRCUTS</div>
-        <p class="barber-sub">Strzyżenie w ramach nauki (0 zł) – uczciwy progres, czystość detalu i budowanie własnego fachu od zera.</p>
+        <p id="statusDesc" class="barber-sub">Aktywny w godzinach 7:00–21:00 • Strzyżenie w ramach nauki (0 zł).</p>
       </div>
     </div>
 
@@ -303,5 +340,50 @@
   <footer>
     DESOHAIRCUTS • Strzyżenie w ramach nauki • <a href="fryzury.html" style="color:#45b88e;text-decoration:none;">Fryzury</a> • <a href="wiedza.html" style="color:#45b88e;text-decoration:none;">Wiedza</a> • <a href="https://www.instagram.com/deso.haircuts/" target="_blank" style="color:#45b88e;text-decoration:none;">@deso.haircuts</a>
   </footer>
+
+  <script>
+    (function () {
+      var badge = document.getElementById("statusBadge");
+      var textEl = document.getElementById("statusText");
+      var descEl = document.getElementById("statusDesc");
+
+      function formatAgo(minutes) {
+        if (minutes < 1) return "chwilę temu";
+        if (minutes < 60) return minutes + " min temu";
+        var h = Math.floor(minutes / 60);
+        var m = minutes % 60;
+        if (m === 0) return h + " godz. temu";
+        return h + " godz. " + m + " min temu";
+      }
+
+      function updateStatus() {
+        var now = new Date();
+        var hour = now.getHours();
+        var isOnline = hour >= 7 && hour < 21;
+
+        if (isOnline) {
+          badge.className = "status-badge is-online";
+          textEl.textContent = "ONLINE";
+          descEl.innerHTML = 'Dostępny w godzinach <span class="last-seen">7:00–21:00</span> • Strzyżenie w ramach nauki (0 zł).';
+        } else {
+          var lastActive = new Date(now);
+          if (hour >= 21) {
+            lastActive.setHours(21, 0, 0, 0);
+          } else {
+            // Po północy (0:00–6:59) ostatnia aktywność była wczoraj o 21:00
+            lastActive.setDate(lastActive.getDate() - 1);
+            lastActive.setHours(21, 0, 0, 0);
+          }
+          var diffMinutes = Math.max(0, Math.floor((now - lastActive) / 60000));
+          badge.className = "status-badge is-offline";
+          textEl.textContent = "OFFLINE";
+          descEl.innerHTML = 'Ostatnio aktywny: <span class="last-seen">' + formatAgo(diffMinutes) + '</span> • Wracam online o 7:00.';
+        }
+      }
+
+      updateStatus();
+      setInterval(updateStatus, 30000);
+    })();
+  </script>
 </body>
 </html>

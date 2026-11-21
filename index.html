@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DESOHAIRCUTS | Barber &amp; Wiedza</title>
+  <title>DESOHAIRCUTS | Strzyżenie w ramach nauki</title>
   <style>
     body {
       margin: 0;
@@ -70,6 +70,17 @@
       justify-content: space-between;
     }
     .hero-text { flex: 1 1 320px; }
+    .pill {
+      display: inline-block;
+      background: #0d3b2c;
+      border: 1px solid #45b88e;
+      color: #45b88e;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
     .hero-photo {
       flex: 1 1 280px;
       max-width: 350px;
@@ -128,21 +139,7 @@
       padding: 18px;
       flex: 1 1 260px;
     }
-    .price { font-size: 24px; font-weight: bold; color: #45b88e; margin: 6px 0; }
-    .rank-box {
-      background: #131c18;
-      border: 1px solid #1e2e27;
-      border-radius: 10px;
-      padding: 18px;
-      margin-bottom: 32px;
-    }
-    .rank-row {
-      display: flex;
-      justify-content: space-between;
-      padding: 10px 0;
-      border-bottom: 1px solid #1e2e27;
-    }
-    .rank-row:last-child { border-bottom: none; }
+    .highlight { font-size: 22px; font-weight: bold; color: #45b88e; margin: 6px 0; }
     footer {
       text-align: center;
       color: #98a8a0;
@@ -155,7 +152,7 @@
 </head>
 <body>
   <header>
-    <a class="brand" href="#">
+    <a class="brand" href="index.html">
       <span class="icon-box" aria-hidden="true">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#45b88e" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="6" cy="6" r="3"/>
@@ -169,23 +166,24 @@
     </a>
     <nav>
       <a href="#ostatnie">Ostatnie cięcie</a>
-      <a href="#wiedza">Wiedza</a>
-      <a href="#rabaty">Rabaty</a>
-      <a href="#ranking">Ranking</a>
+      <a href="#zasady">Zasady</a>
+      <a href="fryzury.html">Fryzury i odblokowania</a>
+      <a href="wiedza.html">Wiedza</a>
     </nav>
   </header>
 
   <div class="container">
     <div class="hero" id="ostatnie">
       <div class="hero-text">
-        <h1>Cięcie, styl i <span>nagrody za wizyty</span></h1>
-        <p>Sprawdź ostatnie cięcie prosto z fotela, zobacz skąd czerpię wiedzę o rzemiośle i korzystaj z rabatów (-50% na co drugą wizytę).</p>
-        <a class="btn" href="#wiedza">Skąd czerpię wiedzę</a>
-        <a class="btn btn-ghost" href="https://www.instagram.com/deso.haircuts/" target="_blank">Instagram</a>
+        <div class="pill">ETAP NAUKI • 0 ZŁ</div>
+        <h1>Strzyżenie w ramach nauki <span>za darmo</span></h1>
+        <p>Buduję fachu, portfolio i czysty detal. Wbij na fotel na darmowe cięcie w ramach praktyki – w zamian liczę na punktualność, luz i wsparcie w rozwoju.</p>
+        <a class="btn" href="fryzury.html">Fryzury i odblokowania</a>
+        <a class="btn btn-ghost" href="wiedza.html">Skąd czerpię wiedzę</a>
       </div>
 
-      <a class="hero-photo" href="https://www.instagram.com/deso.haircuts/" target="_blank">
-        <img src="IMG_1700.HEIC.jpg" alt="Ostatnie cięcie DESOHAIRCUTS" onerror="this.style.display='none'">
+      <a class="hero-photo" href="https://instagram.com/TWOJ_NICK_IG" target="_blank">
+        <img src="ostatnie.jpg" alt="Ostatnie cięcie DESOHAIRCUTS" onerror="this.style.display='none'">
         <div class="photo-caption">
           <span>OSTATNIE CIĘCIE</span>
           <span>Zobacz na IG &rarr;</span>
@@ -193,87 +191,35 @@
       </a>
     </div>
 
-    <div class="sec-title" id="wiedza">
+    <div class="sec-title" id="zasady">
       <span class="icon-box" aria-hidden="true">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#45b88e" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
-          <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+          <polyline points="20 6 9 17 4 12"/>
         </svg>
       </span>
-      <h2>Wiedza – skąd czerpię rozwój</h2>
+      <h2>Zasady na start</h2>
     </div>
     <div class="grid">
       <div class="card">
-        <strong>Praktyka na żywo i główki treningowe</strong>
-        <p style="color:#98a8a0;font-size:14px;margin:8px 0 0;">Szlifuję przejścia, kontury i pracę maszynką oraz nożyczkami na prawdziwych włosach, znajomych i główkach treningowych.</p>
+        <strong>0 zł w ramach nauki</strong>
+        <div class="highlight">Za darmo</div>
+        <p style="color:#98a8a0;font-size:14px;margin:6px 0 0;">Nie pobieram opłat na tym etapie – skupiam się na technice, przejściach, konturze i pielęgnacji na koniec.</p>
       </div>
       <div class="card">
-        <strong>Szkolenia i fucha w praktyce</strong>
-        <p style="color:#98a8a0;font-size:14px;margin:8px 0 0;">Uczę się sprawdzonych technik, ergonomii pracy i czystego wykończenia (w tym pielęgnacji zarostu i stylizacji na koniec).</p>
+        <strong>Czas i luz</strong>
+        <div class="highlight">Bez pośpiechu</div>
+        <p style="color:#98a8a0;font-size:14px;margin:6px 0 0;">Przy zapisie pamiętaj, że to nauka – liczy się dokładność i dopracowanie szczegółów, więc warto mieć zapas czasu.</p>
       </div>
       <div class="card">
-        <strong>Analiza detalu i obserwacja branży</strong>
-        <p style="color:#98a8a0;font-size:14px;margin:8px 0 0;">Śledzę nowoczesne cięcia, pracę z teksturą oraz reakcje klientów, żeby każde kolejne cięcie było czystsze i bardziej dopracowane.</p>
-      </div>
-    </div>
-
-    <div class="sec-title" id="rabaty">
-      <span class="icon-box" aria-hidden="true">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#45b88e" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-        </svg>
-      </span>
-      <h2>Zasady, rabaty i nagrody</h2>
-    </div>
-    <div class="grid">
-      <div class="card">
-        <strong>Cena bazowa</strong>
-        <div class="price">40 zł</div>
-        <div>Dobór fryzury, cięcie i wykończenie z pielęgnacją na koniec.</div>
-      </div>
-      <div class="card">
-        <strong>Co 2. wizyta -50%</strong>
-        <div class="price">20 zł</div>
-        <div>Druga wizyta w cyklu taniej o połowę, żeby łatwo utrzymać świeży efekt.</div>
-      </div>
-      <div class="card">
-        <strong>Prezenty i polecenia</strong>
-        <div class="price">Nagrody</div>
-        <div>Produkty za kolejne wizyty oraz darmowe cięcie za polecenia.</div>
-      </div>
-    </div>
-
-    <div class="sec-title" id="ranking">
-      <span class="icon-box" aria-hidden="true">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#45b88e" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/>
-          <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/>
-          <path d="M4 22h16"/>
-          <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/>
-          <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/>
-          <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/>
-        </svg>
-      </span>
-      <h2>Ranking klientów</h2>
-    </div>
-    <div class="rank-box">
-      <div class="rank-row">
-        <span><strong>#1 Kochan</strong> (Stały Bywalec)</span>
-        <span><strong>6 wizyt</strong></span>
-      </div>
-      <div class="rank-row">
-        <span><strong>#2 Taper</strong> (Ekipa)</span>
-        <span><strong>4 wizyty</strong></span>
-      </div>
-      <div class="rank-row">
-        <span><strong>#3 Kobi</strong> (Nowa Fala)</span>
-        <span><strong>3 wizyty</strong></span>
+        <strong>Wsparcie i polecenia</strong>
+        <div class="highlight">Ekipa</div>
+        <p style="color:#98a8a0;font-size:14px;margin:6px 0 0;">Jeśli cięcie siądzie – podrzuć znajomego, wrzuć relację albo daj znać, co można jeszcze podkręcić.</p>
       </div>
     </div>
   </div>
 
   <footer>
-    DESOHAIRCUTS • <a href="https://instagram.com/TWOJ_NICK_IG" target="_blank" style="color:#45b88e;text-decoration:none;">Instagram @TWOJ_NICK_IG</a>
+    DESOHAIRCUTS • Strzyżenie w ramach nauki • <a href="fryzury.html" style="color:#45b88e;text-decoration:none;">Fryzury</a> • <a href="wiedza.html" style="color:#45b88e;text-decoration:none;">Wiedza</a>
   </footer>
 </body>
 </html>

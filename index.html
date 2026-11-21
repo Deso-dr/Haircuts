@@ -1,11 +1,244 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-  <meta charset="UTF-8">
-  <title>Test DESO</title>
-</head>
-<body style="background:#070a09;color:#45b88e;font-family:sans-serif;padding:40px;">
-  <h1>DESOHAIRCUTS DZIALA</h1>
-  <p>Jesli widzisz ten napis, strona publikuje sie poprawnie.</p>
-</body>
-</html>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DESOHAIRCUTS | Barber &amp; Strzyżenie</title>
+    <style>
+        :root {
+            --bg-dark: #070a09;
+            --bg-panel: #0e1512;
+            --bg-card: #131c18;
+            --bottle-green: #0d3b2c;
+            --bottle-green-hover: #14543f;
+            --accent-emerald: #268c68;
+            --accent-mint: #45b88e;
+            --text-main: #eff5f2;
+            --text-muted: #98a8a0;
+            --border: #1e2e27;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            padding-bottom: 5.5rem;
+        }
+
+        h1, h2, h3, h4, .logo {
+            font-weight: 800;
+            letter-spacing: 0.5px;
+        }
+
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(7, 10, 9, 0.95);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo {
+            font-size: 1.25rem;
+            letter-spacing: 1.5px;
+            color: var(--text-main);
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: var(--accent-mint);
+        }
+
+        nav {
+            display: flex;
+            gap: 1.2rem;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.82rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.7px;
+            transition: color 0.2s;
+        }
+
+        nav a:hover {
+            color: var(--accent-mint);
+        }
+
+        .hero {
+            padding: 5rem 5% 4rem;
+            text-align: center;
+            background: radial-gradient(circle at 50% 20%, rgba(13, 59, 44, 0.55) 0%, rgba(7, 10, 9, 1) 72%);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(13, 59, 44, 0.65);
+            border: 1px solid var(--accent-emerald);
+            color: var(--accent-mint);
+            padding: 0.35rem 1rem;
+            border-radius: 999px;
+            font-size: 0.76rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.1px;
+            margin-bottom: 1.1rem;
+        }
+
+        .hero h1 {
+            font-size: clamp(2rem, 4.5vw, 3.4rem);
+            line-height: 1.15;
+            max-width: 820px;
+            margin: 0 auto 1.1rem;
+        }
+
+        .hero h1 span {
+            color: var(--accent-mint);
+        }
+
+        .hero p {
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto 2rem;
+            font-size: 1.02rem;
+        }
+
+        .btn {
+            display: inline-block;
+            background: var(--bottle-green);
+            color: var(--text-main);
+            border: 1px solid var(--accent-emerald);
+            padding: 0.82rem 1.6rem;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.84rem;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .btn:hover {
+            background: var(--bottle-green-hover);
+            transform: translateY(-1px);
+        }
+
+        .btn-sm {
+            padding: 0.52rem 0.95rem;
+            font-size: 0.76rem;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--accent-emerald);
+            color: var(--text-main);
+            background: rgba(13, 59, 44, 0.25);
+        }
+
+        section {
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 3.8rem 5%;
+        }
+
+        .section-header {
+            margin-bottom: 2rem;
+        }
+
+        .section-header h2 {
+            font-size: 1.65rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .section-header p {
+            color: var(--text-muted);
+            margin-top: 0.35rem;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+            gap: 1.3rem;
+        }
+
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.2rem;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .price-highlight {
+            font-size: 1.65rem;
+            font-weight: 800;
+            color: var(--accent-mint);
+            margin: 0.45rem 0;
+        }
+
+        .cut-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .cut-preview {
+            height: 155px;
+            background: linear-gradient(145deg, #0d3b2c, #091410);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .cut-tag {
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--text-main);
+        }
+
+        .cut-body {
+            padding: 1.15rem;
+        }
+
+        .cut-body p {
+            color: var(--text-muted);
+            font-size: 0.88rem;
+            margin: 0.35

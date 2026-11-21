@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fryzury i daty osiągnięć | DESOHAIRCUTS</title>
+  <title>Fryzury i odblokowania | DESOHAIRCUTS</title>
   <style>
     body {
       margin: 0;
@@ -62,36 +62,62 @@
     }
     h1 { margin: 0 0 8px 0; font-size: 28px; color: #45b88e; }
     h2 { color: #45b88e; margin: 0 0 14px 0; font-size: 21px; }
-    .buzz-featured {
-      background: #131c18;
-      border: 1px solid #268c68;
-      border-radius: 12px;
-      overflow: hidden;
-      display: flex;
-      flex-wrap: wrap;
+
+    /* Fajna obramówka pod kartę odblokowanej fryzury / posta na IG */
+    .ig-frame {
+      background: linear-gradient(160deg, #0f241c 0%, #131c18 100%);
+      border: 2px solid #45b88e;
+      box-shadow: 0 0 28px rgba(38, 140, 104, 0.22);
+      border-radius: 16px;
+      padding: 20px;
       margin-bottom: 32px;
     }
+    .ig-frame-inner {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 22px;
+      align-items: center;
+    }
     .buzz-img {
-      flex: 1 1 300px;
-      min-height: 260px;
-      max-height: 340px;
+      flex: 1 1 280px;
+      max-width: 340px;
+      min-height: 250px;
+      max-height: 330px;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 2px solid #268c68;
       background: linear-gradient(145deg, #0d3b2c, #091410);
     }
     .buzz-img img {
       width: 100%;
       height: 100%;
-      min-height: 260px;
-      max-height: 340px;
+      min-height: 250px;
+      max-height: 330px;
       object-fit: cover;
       display: block;
     }
     .buzz-info {
       flex: 1 1 320px;
-      padding: 22px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
     }
+    .caption-box {
+      margin-top: 14px;
+      background: #070a09;
+      border: 1px dashed #268c68;
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-size: 13px;
+      color: #eff5f2;
+    }
+    .caption-label {
+      display: block;
+      font-size: 11px;
+      font-weight: bold;
+      color: #45b88e;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      margin-bottom: 4px;
+    }
+
     .grid {
       display: flex;
       flex-wrap: wrap;
@@ -105,8 +131,11 @@
       padding: 18px;
       flex: 1 1 250px;
     }
-    .cut-card.unlocked { border-color: #268c68; }
-    .cut-card.locked { opacity: 0.88; }
+    .cut-card.unlocked {
+      border: 1.5px solid #45b88e;
+      box-shadow: 0 0 14px rgba(69, 184, 142, 0.08);
+    }
+    .cut-card.locked { opacity: 0.85; }
     .meta-row {
       display: flex;
       justify-content: space-between;
@@ -187,33 +216,40 @@
     </a>
     <nav>
       <a href="index.html">Strona główna</a>
-      <a href="fryzury.html">Fryzury i daty</a>
+      <a href="fryzury.html">Fryzury i odblokowania</a>
       <a href="wiedza.html">Wiedza</a>
     </nav>
   </header>
 
   <div class="container">
     <div class="top-box">
-      <h1>Fryzury i daty osiągnięć</h1>
-      <p style="margin:0;color:#eff5f2;">Uczciwy dziennik postępów – pokazuję, co już realnie odblokowałem (z datą), a nad czym wciąż pracuję w ramach nauki.</p>
+      <h1>Fryzury i odblokowania</h1>
+      <p style="margin:0;color:#eff5f2;">Uczciwy dziennik nauki. Każda odblokowana fryzura to kolejny krok na fotelu – i gotowy pretekst do wrzucenia progresu na Instagrama.</p>
     </div>
 
-    <h2>Buzz Cut – najlepsze ujęcie</h2>
-    <div class="buzz-featured">
-      <div class="buzz-img">
-        <img src="buzzcut.jpg" alt="Najlepszy Buzz Cut – DESOHAIRCUTS" onerror="this.style.display='none'">
-      </div>
-      <div class="buzz-info">
-        <div class="meta-row">
-          <span class="status-unlocked">ODBLOKOWANA</span>
-          <span class="date-tag">Data: 2026</span>
+    <h2>Karta odblokowanej fryzury • Pod post na IG</h2>
+    <div class="ig-frame">
+      <div class="ig-frame-inner">
+        <div class="buzz-img">
+          <img src="buzzcut.jpg" alt="Buzz Cut – DESOHAIRCUTS" onerror="this.style.display='none'">
         </div>
-        <div class="cut-name" style="font-size:22px;">Buzz Cut</div>
-        <p class="cut-desc">Równa długość maszynką, czysty kontur i dopracowane przejście na karku oraz skroniach. Wrzuć zdjęcie do repozytorium jako <strong style="color:#eff5f2;">buzzcut.jpg</strong>, żeby pokazało się po lewej.</p>
+        <div class="buzz-info">
+          <div class="meta-row">
+            <span class="status-unlocked">ODBLOKOWANE • ETAP NAUKI</span>
+            <span class="date-tag">Data: 2026</span>
+          </div>
+          <div class="cut-name" style="font-size:24px;">Buzz Cut</div>
+          <p class="cut-desc">Równa długość, czysty kontur i dopracowane przejście. Wrzuć zdjęcie do repozytorium jako <strong style="color:#eff5f2;">buzzcut.jpg</strong>, żeby pokazało się w ramce.</p>
+
+          <div class="caption-box">
+            <span class="caption-label">Gotowy szkic opisu na Instagram</span>
+            Kolejny krok w nauce odblokowany: <strong>Buzz Cut</strong>. Bez udawania gotowego mistrza – po prostu regularna praktyka, wyciąganie wniosków i czysty detal. Chcesz wbić na fotel w ramach nauki? Pisz śmiało. #desohaircuts #barber #nauka #buzzcut
+          </div>
+        </div>
       </div>
     </div>
 
-    <h2>Lista fryzur – uczciwy status i daty</h2>
+    <h2>Wszystkie fryzury – status i daty</h2>
     <div class="grid">
       <div class="cut-card unlocked">
         <div class="meta-row">
@@ -239,7 +275,7 @@
           <span class="date-tag">W drodze</span>
         </div>
         <div class="cut-name">Low / Mid Fade</div>
-        <p class="cut-desc">Ćwiczę płynność przejścia i kontrolę cieniowania – jeszcze nie odhaczam jako w pełni opanowane.</p>
+        <p class="cut-desc">Ćwiczę płynność przejścia i kontrolę cieniowania.</p>
       </div>
 
       <div class="cut-card locked">
@@ -248,7 +284,7 @@
           <span class="date-tag">W drodze</span>
         </div>
         <div class="cut-name">Skin Fade</div>
-        <p class="cut-desc">Cieniowanie do zera – na tym etapie szlifuję przejścia bez zostawiania śladów.</p>
+        <p class="cut-desc">Cieniowanie do zera – szlifuję przejścia bez widocznych linii.</p>
       </div>
 
       <div class="cut-card locked">
@@ -274,7 +310,7 @@
   </div>
 
   <footer>
-    DESOHAIRCUTS • Uczciwy progres i daty osiągnięć
+    DESOHAIRCUTS • Uczciwy progres i postępy na IG
   </footer>
 </body>
 </html>

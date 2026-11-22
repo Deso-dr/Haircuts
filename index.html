@@ -237,18 +237,19 @@
       font-size: 13px;
       cursor: pointer;
     }
-    .btn:hover { background: #13523d; border-color: #45b88e; }
+    .btn:hover:not(:disabled) { background: #13523d; border-color: #45b88e; }
+    .btn:disabled { opacity: 0.55; cursor: not-allowed; }
     .btn-primary {
       background: #268c68;
       border-color: #45b88e;
       color: #070a09;
     }
-    .btn-primary:hover {
+    .btn-primary:hover:not(:disabled) {
       background: #45b88e;
       color: #070a09;
     }
     .btn-ghost { background: transparent; border-color: #45b88e; color: #45b88e; }
-    .btn-ghost:hover { background: rgba(69, 184, 142, 0.12); }
+    .btn-ghost:hover:not(:disabled) { background: rgba(69, 184, 142, 0.12); }
 
     .grid { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 32px; }
     .card {
@@ -366,6 +367,7 @@
       color: #79e2bc;
       min-height: 18px;
     }
+    .feedback-msg.is-error { color: #ff8a80; }
 
     footer {
       text-align: center;
@@ -499,7 +501,7 @@
       </div>
 
       <div class="field-group">
-        <label class="field-label" for="bookingTime">Godzina</label>
+        <label class="field-label" for="bookingTime">Godzina (zajęte godziny są zablokowane)</label>
         <select id="bookingTime" class="field-select"></select>
       </div>
 
@@ -513,8 +515,7 @@
       </div>
 
       <div class="modal-actions">
-        <button type="button" class="btn btn-ghost" id="copyBookingBtn">Kopiuj wiadomość</button>
-        <button type="button" class="btn btn-primary" id="sendBookingIgBtn">Kopiuj i otwórz IG</button>
+        <button type="button" class="btn btn-primary" id="confirmBookingBtn">Potwierdź termin</button>
       </div>
       <div class="feedback-msg" id="bookingFeedback"></div>
     </div>
@@ -526,6 +527,8 @@
 
   <script>
     (function () {
+      const BOOKING_API_URL = "https://script.google.com/macros/s/AKfycbwqAlPUPoCjz9B5Odf0pT7aI_iNkuA4EwPTWmrFnPJnxjQF1EdRpwd42N_dzJOh3rR8/exec";
+
       var badge = document.getElementById("statusBadge");
       var textEl = document.getElementById("statusText");
       var descEl = document.getElementById("statusDesc");
@@ -566,7 +569,6 @@
       updateStatus();
       setInterval(updateStatus, 30000);
 
-      // Kalendarz + wybór godziny
       var modal = document.getElementById("bookingModal");
       var openBtns = [document.getElementById("openBookingBtn"), document.getElementById("heroBookingBtn")];
       var closeBtn = document.getElementById("closeBookingBtn");
@@ -575,9 +577,13 @@
       var cutInput = document.getElementById("bookingCut");
       var ruleHint = document.getElementById("dayRuleHint");
       var summaryBox = document.getElementById("bookingSummary");
-      var copyBtn = document.getElementById("copyBookingBtn");
-      var sendIgBtn = document.getElementById("sendBookingIgBtn");
+      var confirmBtn = document.getElementById("confirmBookingBtn");
       var feedbackEl = document.getElementById("bookingFeedback");
+
+      function setFeedback(text, isError) {
+        feedbackEl.textContent = text;
+        feedbackEl.className = isError ? "feedback-msg is-error" : "feedback-msg";
+      }
 
       function toIsoDate(d) {
         var year = d.getFullYear();
@@ -594,80 +600,123 @@
         }
       }
 
-      function populateHoursForDate(isoStr) {
+      async function fetchBookedHours(isoDate) {
+        try {
+          var res = await fetch(BOOKING_API_URL + "?date=" + encodeURIComponent(isoDate));
+          var data = await res.json();
+          return Array.isArray(data.booked) ? data.booked : [];
+        } catch (err) {
+          return [];
+        }
+      }
+
+      async function renderHoursForDate(isoStr) {
         if (!isoStr) return;
         var parts = isoStr.split("-");
         var dt = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
-        var dayOfWeek = dt.getDay(); // 0 = nd, 6 = sob
+        var dayOfWeek = dt.getDay();
         var isWeekend = (dayOfWeek === 0 || dayOfWeek === 6);
         var startHour = isWeekend ? 7 : 15;
         var endHour = 21;
 
         ruleHint.textContent = isWeekend
-          ? "Wybrano weekend (sob–nd): dostępne godziny 7:00–21:00."
-          : "Wybrano dzień roboczy (pon–pt): dostępne godziny 15:00–21:00.";
+          ? "Wybrano weekend (sob–nd): godziny 7:00–21:00."
+          : "Wybrano dzień roboczy (pon–pt): godziny 15:00–21:00.";
 
-        var prevValue = timeSelect.value;
+        timeSelect.disabled = true;
+        confirmBtn.disabled = true;
+        timeSelect.innerHTML = '<option value="">Sprawdzam wolne godziny...</option>';
+
+        var bookedList = await fetchBookedHours(isoStr);
+        var bookedSet = new Set(bookedList);
+
         timeSelect.innerHTML = "";
+        var firstFreeValue = "";
 
         for (var h = startHour; h <= endHour; h++) {
           for (var m = 0; m < 60; m += 30) {
             if (h === endHour && m > 0) break;
             var label = String(h).padStart(2, "0") + ":" + String(m).padStart(2, "0");
+            var isBooked = bookedSet.has(label);
             var opt = document.createElement("option");
             opt.value = label;
-            opt.textContent = label;
+            opt.disabled = isBooked;
+            opt.textContent = isBooked ? (label + " (zajęte)") : label;
             timeSelect.appendChild(opt);
-          }
-        }
-
-        if (prevValue) {
-          for (var i = 0; i < timeSelect.options.length; i++) {
-            if (timeSelect.options[i].value === prevValue) {
-              timeSelect.value = prevValue;
-              break;
+            if (!isBooked && !firstFreeValue) {
+              firstFreeValue = label;
             }
           }
         }
-        updateSummary();
-      }
 
-      function buildMessage() {
-        var dateVal = dateInput.value || "do ustalenia";
-        var timeVal = timeSelect.value || "do ustalenia";
-        var cutVal = cutInput.value.trim();
-        var msg = "Cześć! Chciałbym zgadać się na strzyżenie w ramach nauki (0 zł) na " + dateVal + " o godzinie " + timeVal + ".";
-        if (cutVal) {
-          msg += " Preferencja: " + cutVal + ".";
+        if (firstFreeValue) {
+          timeSelect.value = firstFreeValue;
+          timeSelect.disabled = false;
+          confirmBtn.disabled = false;
+        } else {
+          var noneOpt = document.createElement("option");
+          noneOpt.value = "";
+          noneOpt.textContent = "Brak wolnych godzin w tym dniu";
+          timeSelect.appendChild(noneOpt);
+          timeSelect.value = "";
+          timeSelect.disabled = true;
+          confirmBtn.disabled = true;
         }
-        return msg;
+
+        updateSummary();
       }
 
       function updateSummary() {
         var dateVal = dateInput.value || "—";
-        var timeVal = timeSelect.value || "—";
+        var timeVal = timeSelect.value || "brak wolnych godzin";
         summaryBox.innerHTML =
-          'Wybrany termin: <strong style="color:#79e2bc;">' + dateVal + '</strong> o <strong style="color:#79e2bc;">' + timeVal + '</strong> (0 zł • w ramach nauki).';
+          'Wybrany termin: <strong style="color:#79e2bc;">' + dateVal + '</strong> • <strong style="color:#79e2bc;">' + timeVal + '</strong> (0 zł • w ramach nauki).';
       }
 
-      function copyMessageToClipboard() {
-        var text = buildMessage();
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-          navigator.clipboard.writeText(text).then(function () {
-            feedbackEl.textContent = "Skopiowano wiadomość – wklej ją w wiadomości do @deso.haircuts.";
-          }, function () {
-            feedbackEl.textContent = "Wiadomość: " + text;
+      async function confirmBooking() {
+        var dateVal = dateInput.value;
+        var timeVal = timeSelect.value;
+        var cutVal = cutInput.value.trim();
+
+        if (!dateVal || !timeVal) {
+          setFeedback("Wybierz dostępny dzień i wolną godzinę.", true);
+          return;
+        }
+
+        confirmBtn.disabled = true;
+        setFeedback("Zapisuję termin i wysyłam powiadomienie...", false);
+
+        try {
+          var res = await fetch(BOOKING_API_URL, {
+            method: "POST",
+            headers: { "Content-Type": "text/plain;charset=utf-8" },
+            body: JSON.stringify({
+              date: dateVal,
+              time: timeVal,
+              cut: cutVal
+            })
           });
-        } else {
-          feedbackEl.textContent = "Wiadomość: " + text;
+          var data = await res.json();
+
+          if (data && data.ok) {
+            setFeedback("Termin zarezerwowany! Powiadomienie wysłane na e-mail, a godzina " + timeVal + " została zablokowana.", false);
+            cutInput.value = "";
+            await renderHoursForDate(dateVal);
+          } else {
+            setFeedback((data && data.error) ? data.error : "Nie udało się zapisać terminu.", true);
+            await renderHoursForDate(dateVal);
+          }
+        } catch (err) {
+          setFeedback("Błąd połączenia podczas zapisu terminu.", true);
+          confirmBtn.disabled = false;
         }
       }
 
       function openModal() {
         setMinDate();
-        populateHoursForDate(dateInput.value);
-        feedbackEl.textContent = "";
+        setFeedback("", false);
         modal.classList.add("is-open");
+        renderHoursForDate(dateInput.value);
       }
 
       function closeModal() {
@@ -683,22 +732,14 @@
       });
 
       dateInput.addEventListener("change", function () {
-        feedbackEl.textContent = "";
-        populateHoursForDate(dateInput.value);
+        setFeedback("", false);
+        renderHoursForDate(dateInput.value);
       });
       timeSelect.addEventListener("change", function () {
-        feedbackEl.textContent = "";
+        setFeedback("", false);
         updateSummary();
       });
-      cutInput.addEventListener("input", function () {
-        feedbackEl.textContent = "";
-      });
-
-      copyBtn.addEventListener("click", copyMessageToClipboard);
-      sendIgBtn.addEventListener("click", function () {
-        copyMessageToClipboard();
-        window.open("https://www.instagram.com/deso.haircuts/", "_blank", "noopener");
-      });
+      confirmBtn.addEventListener("click", confirmBooking);
     })();
   </script>
 </body>

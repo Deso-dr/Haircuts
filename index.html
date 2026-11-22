@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DESOHAIRCUTS | Strzyżenie w ramach nauki</title>
   <style>
+    * { box-sizing: border-box; }
     body {
       margin: 0;
       padding: 0;
@@ -234,8 +235,21 @@
       text-decoration: none;
       font-weight: bold;
       font-size: 13px;
+      cursor: pointer;
+    }
+    .btn:hover { background: #13523d; border-color: #45b88e; }
+    .btn-primary {
+      background: #268c68;
+      border-color: #45b88e;
+      color: #070a09;
+    }
+    .btn-primary:hover {
+      background: #45b88e;
+      color: #070a09;
     }
     .btn-ghost { background: transparent; border-color: #45b88e; color: #45b88e; }
+    .btn-ghost:hover { background: rgba(69, 184, 142, 0.12); }
+
     .grid { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 32px; }
     .card {
       background: #131c18;
@@ -254,6 +268,105 @@
       font-size: 14px;
     }
     .hours-row:last-child { border-bottom: none; padding-bottom: 0; }
+
+    /* Modal kalendarza i godziny */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(4, 7, 6, 0.82);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      z-index: 999;
+    }
+    .modal-backdrop.is-open { display: flex; }
+    .modal-box {
+      width: 100%;
+      max-width: 460px;
+      background: #0e1512;
+      border: 1px solid #268c68;
+      border-radius: 14px;
+      padding: 22px;
+      box-shadow: 0 0 36px rgba(38, 140, 104, 0.35);
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+    .modal-header h3 {
+      margin: 0;
+      color: #45b88e;
+      font-size: 19px;
+    }
+    .modal-close {
+      background: #131c18;
+      color: #eff5f2;
+      border: 1px solid #2b3e35;
+      border-radius: 6px;
+      width: 32px;
+      height: 32px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .modal-close:hover { border-color: #45b88e; color: #45b88e; }
+    .field-group { margin-bottom: 14px; }
+    .field-label {
+      display: block;
+      font-size: 13px;
+      font-weight: bold;
+      margin-bottom: 6px;
+      color: #eff5f2;
+    }
+    .field-input, .field-select {
+      width: 100%;
+      background: #131c18;
+      color: #eff5f2;
+      border: 1px solid #2b3e35;
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 14px;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+    .field-input:focus, .field-select:focus {
+      outline: none;
+      border-color: #45b88e;
+    }
+    .field-hint {
+      font-size: 12px;
+      color: #98a8a0;
+      margin-top: 5px;
+    }
+    .summary-box {
+      background: #131c18;
+      border: 1px solid #1e2e27;
+      border-left: 4px solid #45b88e;
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 13px;
+      color: #eff5f2;
+      margin-bottom: 14px;
+    }
+    .modal-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .modal-actions .btn {
+      margin: 0;
+      flex: 1 1 160px;
+      text-align: center;
+    }
+    .feedback-msg {
+      margin-top: 10px;
+      font-size: 13px;
+      color: #79e2bc;
+      min-height: 18px;
+    }
+
     footer {
       text-align: center;
       color: #98a8a0;
@@ -300,6 +413,9 @@
         <div class="barber-name">DESOHAIRCUTS</div>
         <p id="statusDesc" class="barber-sub">Strzyżenia: pon–pt 15:00–21:00, sob–nd 7:00–21:00 • Etap nauki (0 zł).</p>
       </div>
+      <div>
+        <button type="button" class="btn btn-primary" id="openBookingBtn" style="margin:0;">Umów strzyżenie</button>
+      </div>
     </div>
 
     <div class="hero" id="ostatnie">
@@ -307,6 +423,7 @@
         <div class="pill">ETAP NAUKI • 0 ZŁ</div>
         <h1>Strzyżenie w ramach nauki <span>za darmo</span></h1>
         <p>Buduję fachu, portfolio i czysty detal. Wbij na fotel na darmowe cięcie w ramach praktyki – w zamian liczę na punktualność, luz i wsparcie w rozwoju.</p>
+        <button type="button" class="btn btn-primary" id="heroBookingBtn">Umów strzyżenie</button>
         <a class="btn" href="fryzury.html">Fryzury i odblokowania</a>
         <a class="btn btn-ghost" href="https://www.instagram.com/deso.haircuts/" target="_blank">Instagram @deso.haircuts</a>
       </div>
@@ -367,6 +484,42 @@
     </div>
   </div>
 
+  <!-- Wyskakujące okno z kalendarzem i wyborem godziny -->
+  <div class="modal-backdrop" id="bookingModal" role="dialog" aria-modal="true" aria-labelledby="bookingTitle">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 id="bookingTitle">Wybierz dzień i godzinę</h3>
+        <button type="button" class="modal-close" id="closeBookingBtn" aria-label="Zamknij">&times;</button>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label" for="bookingDate">Dzień (kalendarz)</label>
+        <input type="date" id="bookingDate" class="field-input">
+        <div class="field-hint" id="dayRuleHint">Pon–pt: 15:00–21:00 • Sob–nd: 7:00–21:00</div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label" for="bookingTime">Godzina</label>
+        <select id="bookingTime" class="field-select"></select>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label" for="bookingCut">Fryzura / uwaga (opcjonalnie)</label>
+        <input type="text" id="bookingCut" class="field-input" placeholder="np. Buzz Cut, Fade, czysta góra">
+      </div>
+
+      <div class="summary-box" id="bookingSummary">
+        Wybrany termin pojawi się tutaj.
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn btn-ghost" id="copyBookingBtn">Kopiuj wiadomość</button>
+        <button type="button" class="btn btn-primary" id="sendBookingIgBtn">Kopiuj i otwórz IG</button>
+      </div>
+      <div class="feedback-msg" id="bookingFeedback"></div>
+    </div>
+  </div>
+
   <footer>
     DESOHAIRCUTS • Strzyżenia: pon–pt 15:00–21:00, sob–nd 7:00–21:00 • <a href="fryzury.html" style="color:#45b88e;text-decoration:none;">Fryzury</a> • <a href="wiedza.html" style="color:#45b88e;text-decoration:none;">Wiedza</a> • <a href="https://www.instagram.com/deso.haircuts/" target="_blank" style="color:#45b88e;text-decoration:none;">@deso.haircuts</a>
   </footer>
@@ -412,6 +565,140 @@
 
       updateStatus();
       setInterval(updateStatus, 30000);
+
+      // Kalendarz + wybór godziny
+      var modal = document.getElementById("bookingModal");
+      var openBtns = [document.getElementById("openBookingBtn"), document.getElementById("heroBookingBtn")];
+      var closeBtn = document.getElementById("closeBookingBtn");
+      var dateInput = document.getElementById("bookingDate");
+      var timeSelect = document.getElementById("bookingTime");
+      var cutInput = document.getElementById("bookingCut");
+      var ruleHint = document.getElementById("dayRuleHint");
+      var summaryBox = document.getElementById("bookingSummary");
+      var copyBtn = document.getElementById("copyBookingBtn");
+      var sendIgBtn = document.getElementById("sendBookingIgBtn");
+      var feedbackEl = document.getElementById("bookingFeedback");
+
+      function toIsoDate(d) {
+        var year = d.getFullYear();
+        var month = String(d.getMonth() + 1).padStart(2, "0");
+        var day = String(d.getDate()).padStart(2, "0");
+        return year + "-" + month + "-" + day;
+      }
+
+      function setMinDate() {
+        var today = new Date();
+        dateInput.min = toIsoDate(today);
+        if (!dateInput.value) {
+          dateInput.value = toIsoDate(today);
+        }
+      }
+
+      function populateHoursForDate(isoStr) {
+        if (!isoStr) return;
+        var parts = isoStr.split("-");
+        var dt = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
+        var dayOfWeek = dt.getDay(); // 0 = nd, 6 = sob
+        var isWeekend = (dayOfWeek === 0 || dayOfWeek === 6);
+        var startHour = isWeekend ? 7 : 15;
+        var endHour = 21;
+
+        ruleHint.textContent = isWeekend
+          ? "Wybrano weekend (sob–nd): dostępne godziny 7:00–21:00."
+          : "Wybrano dzień roboczy (pon–pt): dostępne godziny 15:00–21:00.";
+
+        var prevValue = timeSelect.value;
+        timeSelect.innerHTML = "";
+
+        for (var h = startHour; h <= endHour; h++) {
+          for (var m = 0; m < 60; m += 30) {
+            if (h === endHour && m > 0) break;
+            var label = String(h).padStart(2, "0") + ":" + String(m).padStart(2, "0");
+            var opt = document.createElement("option");
+            opt.value = label;
+            opt.textContent = label;
+            timeSelect.appendChild(opt);
+          }
+        }
+
+        if (prevValue) {
+          for (var i = 0; i < timeSelect.options.length; i++) {
+            if (timeSelect.options[i].value === prevValue) {
+              timeSelect.value = prevValue;
+              break;
+            }
+          }
+        }
+        updateSummary();
+      }
+
+      function buildMessage() {
+        var dateVal = dateInput.value || "do ustalenia";
+        var timeVal = timeSelect.value || "do ustalenia";
+        var cutVal = cutInput.value.trim();
+        var msg = "Cześć! Chciałbym zgadać się na strzyżenie w ramach nauki (0 zł) na " + dateVal + " o godzinie " + timeVal + ".";
+        if (cutVal) {
+          msg += " Preferencja: " + cutVal + ".";
+        }
+        return msg;
+      }
+
+      function updateSummary() {
+        var dateVal = dateInput.value || "—";
+        var timeVal = timeSelect.value || "—";
+        summaryBox.innerHTML =
+          'Wybrany termin: <strong style="color:#79e2bc;">' + dateVal + '</strong> o <strong style="color:#79e2bc;">' + timeVal + '</strong> (0 zł • w ramach nauki).';
+      }
+
+      function copyMessageToClipboard() {
+        var text = buildMessage();
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(function () {
+            feedbackEl.textContent = "Skopiowano wiadomość – wklej ją w wiadomości do @deso.haircuts.";
+          }, function () {
+            feedbackEl.textContent = "Wiadomość: " + text;
+          });
+        } else {
+          feedbackEl.textContent = "Wiadomość: " + text;
+        }
+      }
+
+      function openModal() {
+        setMinDate();
+        populateHoursForDate(dateInput.value);
+        feedbackEl.textContent = "";
+        modal.classList.add("is-open");
+      }
+
+      function closeModal() {
+        modal.classList.remove("is-open");
+      }
+
+      openBtns.forEach(function (btn) {
+        if (btn) btn.addEventListener("click", openModal);
+      });
+      closeBtn.addEventListener("click", closeModal);
+      modal.addEventListener("click", function (e) {
+        if (e.target === modal) closeModal();
+      });
+
+      dateInput.addEventListener("change", function () {
+        feedbackEl.textContent = "";
+        populateHoursForDate(dateInput.value);
+      });
+      timeSelect.addEventListener("change", function () {
+        feedbackEl.textContent = "";
+        updateSummary();
+      });
+      cutInput.addEventListener("input", function () {
+        feedbackEl.textContent = "";
+      });
+
+      copyBtn.addEventListener("click", copyMessageToClipboard);
+      sendIgBtn.addEventListener("click", function () {
+        copyMessageToClipboard();
+        window.open("https://www.instagram.com/deso.haircuts/", "_blank", "noopener");
+      });
     })();
   </script>
 </body>

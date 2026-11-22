@@ -687,15 +687,14 @@
         setFeedback("Zapisuję termin i wysyłam powiadomienie...", false);
 
         try {
-          var res = await fetch(BOOKING_API_URL, {
-            method: "POST",
-            headers: { "Content-Type": "text/plain;charset=utf-8" },
-            body: JSON.stringify({
-              date: dateVal,
-              time: timeVal,
-              cut: cutVal
-            })
-          });
+          var url =
+            BOOKING_API_URL +
+            "?action=book" +
+            "&date=" + encodeURIComponent(dateVal) +
+            "&time=" + encodeURIComponent(timeVal) +
+            "&cut=" + encodeURIComponent(cutVal);
+
+          var res = await fetch(url);
           var data = await res.json();
 
           if (data && data.ok) {
